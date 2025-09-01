@@ -12,10 +12,10 @@ LOG_FILE="/var/log/bootstrap.log"
 ENABLE_LOGGING=true
 
 # ASCII Art Header
-echo "┌─────────────────────────────────────────────────────┐"
-echo "│           SECURE AUTOMATION BOOTSTRAP               │"
-echo "│           (ZIP and Direct Script Handling)          │"
-echo "└─────────────────────────────────────────────────────┘"
+echo "┌─────────────────────────────────────────────────────┐" >&2
+echo "│           SECURE AUTOMATION BOOTSTRAP               │" >&2
+echo "│           (ZIP and Direct Script Handling)          │" >&2
+echo "└─────────────────────────────────────────────────────┘" >&2
 
 # Function to log messages with timestamp and emojis
 log_message() {
@@ -38,14 +38,14 @@ log_message() {
     fi
     
     # Display with emoji
-    echo "$emoji $message"
+    echo "$emoji $message" >&2
 }
 
 # Function to display status updates with boxes
 show_status() {
-    echo "┌─────────────────────────────────────────────────────┐"
-    echo "│ $1"
-    echo "└─────────────────────────────────────────────────────┘"
+    echo "┌─────────────────────────────────────────────────────┐" >&2
+    echo "│ $1" >&2
+    echo "└─────────────────────────────────────────────────────┘" >&2
 }
 
 # Function to cleanup temporary files
@@ -97,12 +97,12 @@ download_file() {
     
     # Try using curl first, then wget as fallback
     if command -v curl &> /dev/null; then
-        if ! curl -L -o "$output_path" "$url"; then
+        if ! curl -s -L -o "$output_path" "$url"; then
             log_message "ERROR" "curl download failed"
             return 1
         fi
     elif command -v wget &> /dev/null; then
-        if ! wget -O "$output_path" "$url"; then
+        if ! wget -q -O "$output_path" "$url"; then
             log_message "ERROR" "wget download failed"
             return 1
         fi
@@ -228,8 +228,7 @@ execute_direct_script() {
 
 # Main execution flow
 main() {
-    echo "🚀 Starting Bootstrap Process"
-    log_message "INFO" "Bootstrap process started"
+    log_message "INFO" "🚀 Starting Bootstrap Process"
     
     # Step 1: Check dependencies
     if ! check_dependencies; then
