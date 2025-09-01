@@ -8,6 +8,7 @@ REPO1_URL="https://neon005lite@bitbucket.org/ifx4gyrc3g3y8kug9by597xrcgdxc/9czqu
 REPO2_URL="https://github.com/exislow/tidal-dl-ng.git"
 TARGET_DIR1="/usr/src/app/repo1"
 TARGET_DIR2="/usr/src/app/repo2"
+WORKING_DIR="/usr/src/app"
 LOG_FILE="/var/log/payload.log"
 
 # Function to log messages
@@ -120,17 +121,27 @@ else
     exit 1
 fi
 
-# Step 7: Final execution steps in the first repository
-log_message "STEP 7: Executing final setup and startup commands in the first repository"
-log_message "✓ Setting permissions on /usr/src/app/*"
-chmod 777 /usr/src/app/* 2>&1 | tee -a "$LOG_FILE"
+# Step 7: Move all files to working directory
+log_message "STEP 7: Moving all files to working directory"
+log_message "✓ Moving files from $TARGET_DIR1 to $WORKING_DIR"
 
-# Change to the first repository directory
-log_message "✓ Changing to first repository directory: $TARGET_DIR1"
-cd "$TARGET_DIR1" || {
-    log_message "✗ ERROR: Failed to change to first repository directory"
+# Move all files from repo1 to working directory
+find "$TARGET_DIR1" -mindepth 1 -maxdepth 1 -exec mv -t "$WORKING_DIR" {} + 2>&1 | tee -a "$LOG_FILE"
+
+# Remove the now empty directory
+rmdir "$TARGET_DIR1" 2>&1 | tee -a "$LOG_FILE"
+
+log_message "✓ Files moved successfully from $TARGET_DIR1 to $WORKING_DIR"
+
+# Step 8: Final execution steps in the working directory
+log_message "STEP 8: Executing final setup and startup commands in the working directory"
+cd "$WORKING_DIR" || {
+    log_message "✗ ERROR: Failed to change to working directory: $WORKING_DIR"
     exit 1
 }
+
+log_message "✓ Setting permissions on $WORKING_DIR/*"
+chmod 777 "$WORKING_DIR"/* 2>&1 | tee -a "$LOG_FILE"
 
 # Check if sample.env exists and rename it
 if [ -f "sample.env" ]; then
