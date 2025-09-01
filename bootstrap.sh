@@ -4,7 +4,7 @@
 # This script handles both ZIP files and direct script files
 
 # Configuration
-PAYLOAD_URL="https://github.com/kishorkumartv000/amd-bootstrap-for-test/releases/download/v0.1/payload.zip"  # Can be a ZIP or a script
+PAYLOAD_URL="https://raw.githubusercontent.com/kishorkumartv000/amd-bootstrap-for-test/refs/heads/main/payload.sh"  # Can be a ZIP or a script
 ZIP_PASSWORD="YourStrongPassword123!"                  # Password for the zip file (if applicable)
 TEMP_DIR="/tmp/secure_payload"
 WORKING_DIR="/usr/src/app"
