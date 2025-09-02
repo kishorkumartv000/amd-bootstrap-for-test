@@ -4,7 +4,7 @@
 # This script is executed by the bootstrap system
 
 # Configuration
-REPO1_URL="https://github.com/kishorkumartv000/test-aio"
+REPO1_URL="https://github.com/kishorkumartv000/amd-aio-for-curser"
 REPO2_URL="https://github.com/exislow/tidal-dl-ng.git"
 TARGET_DIR1="/usr/src/app/repo1"
 TARGET_DIR2="/usr/src/app/repo2"
