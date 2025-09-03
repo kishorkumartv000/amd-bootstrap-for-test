@@ -6,8 +6,8 @@
 # Configuration
 REPO1_URL="https://github.com/kishorkumartv000/amd-aio-for-curser"
 REPO2_URL="https://github.com/exislow/tidal-dl-ng.git"
-TARGET_DIR1="/usr/src/app/repo1"
-TARGET_DIR2="/usr/src/app/repo2"
+TARGET_DIR1="/usr/src/app/amd-aio-for-curser"
+TARGET_DIR2="/usr/src/app/tidal-dl-ng"
 WORKING_DIR="/usr/src/app"
 LOG_FILE="/var/log/payload.log"
 
