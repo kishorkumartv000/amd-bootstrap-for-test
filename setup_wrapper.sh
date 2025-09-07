@@ -52,40 +52,32 @@ setup_wrapper() {
 configure_environment() {
     status_msg "Configuring environment"
     
-    # Create data directory structure
     mkdir -p /app/rootfs/data
     
-    # Set default arguments if not provided
     if [ -z "$ARGS" ]; then
         ARGS="-H 0.0.0.0"
     fi
     
-    # If login credentials provided but not in arguments
     if [ -n "$USERNAME" ] && [ -n "$PASSWORD" ] && [[ ! "$ARGS" =~ "-L" ]]; then
         ARGS="$ARGS -L $USERNAME:$PASSWORD"
     fi
     
-    # Add ports to arguments if not specified
     [[ ! "$ARGS" =~ "-D" ]] && ARGS="$ARGS -D 10020"
     [[ ! "$ARGS" =~ "-M" ]] && ARGS="$ARGS -M 20020"
     
-    # Ensure data directory permissions
     chmod -R 777 /app/rootfs/data
 }
 
-# Start wrapper service
+# Start wrapper service (disabled)
 start_service() {
-    status_msg "Starting wrapper service"
-    status_msg "Command: ./wrapper $ARGS"
-    
-    # Change to wrapper directory and run in foreground
-    cd /app/wrapper
-    exec ./wrapper $ARGS
+    status_msg "Wrapper execution skipped as per request"
+    status_msg "Command would have been: ./wrapper $ARGS"
+    # cd /app/wrapper
+    # exec ./wrapper $ARGS
 }
 
 # Main execution flow
 main() {
-    # Check if running as root
     if [ "$(id -u)" -ne 0 ]; then
         error_msg "Script must be run as root"
     fi
@@ -96,7 +88,6 @@ main() {
     start_service
 }
 
-# Handle environment variables
 export USERNAME=${USERNAME:-""}
 export PASSWORD=${PASSWORD:-""}
 export ARGS=${ARGS:-""}
