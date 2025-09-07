@@ -12,9 +12,9 @@ WORKING_DIR="/usr/src/app"
 LOG_FILE="/var/log/payload.log"
 
 # Control flags for dependency installation (set to true/false as needed)
-INSTALL_DEPS_REPO1=true
-INSTALL_DEPS_REPO2=true
-INSTALL_POETRY=true
+INSTALL_DEPS_REPO1=false
+INSTALL_DEPS_REPO2=false
+INSTALL_POETRY=false
 
 # Function to log messages
 log_message() {
