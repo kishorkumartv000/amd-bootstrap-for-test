@@ -72,34 +72,5 @@ cd "$HOME/amalac"
 /usr/local/go/bin/go mod tidy
 echo "Application built successfully!"
 
-# 4. Create default config for downloader
-CONFIG_FILE="$HOME/amalac/am_downloader.conf"
-if [ ! -f "$CONFIG_FILE" ]; then
-    cat > "$CONFIG_FILE" <<EOL
-# Cloud Storage Configuration
-# Available remotes: (run 'rclone listremotes' to see options)
-ACTIVE_REMOTES=("your_remote_name")
-CLOUD_BASE_PATH="AppleMusic"
-
-# Local Directories
-MUSIC_BASE_DIR="$HOME/Music/Apple Music"
-ALAC_DIR="$MUSIC_BASE_DIR/alac"
-ATMOS_DIR="$MUSIC_BASE_DIR/atmos"
-
-# Sync Options
-DELETE_AFTER_SYNC=true
-SYNC_CONCURRENCY=4
-LOG_FILE="$HOME/amalac/sync.log"
-
-# Rclone Configuration Path
-# RCLONE_CONFIG_PATH="$HOME/.config/rclone/rclone.conf"
-EOL
-    echo "Created default configuration: $CONFIG_FILE"
-fi
-
-# 5. Finalize installation
-echo "Step 5/5: Finalizing installation..."
-
-
 echo "=== Installation Complete! ==="
 echo "Your Apple Music downloader is ready to use."
