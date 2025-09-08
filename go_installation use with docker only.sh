@@ -11,7 +11,7 @@ ALAC_DIR="$HOME/Music/Apple Music/alac"
 ATMOS_DIR="$HOME/Music/Apple Music/atmos"
 AAC_DIR="$HOME/Music/Apple Music/aac"
 
-# 1. Install Go 1.24.1
+# 1. Install Go 1.25.0
 echo "Step 1/5: Installing Go language..."
 sudo rm -rf /usr/local/go /usr/lib/go-* 2>/dev/null || true
 
@@ -24,14 +24,14 @@ case $ARCH in
     *) echo "Unsupported architecture: $ARCH"; exit 1 ;;
 esac
 
-echo "Downloading Go 1.24.1 for $ARCH..."
-wget -q --show-progress "https://go.dev/dl/go1.24.1.linux-${GO_ARCH}.tar.gz" -O /tmp/go.tar.gz
+echo "Downloading Go 1.25.0 for $ARCH..."
+wget -q --show-progress "https://go.dev/dl/go1.25.0.linux-${GO_ARCH}.tar.gz" -O /tmp/go.tar.gz
 sudo tar -C /usr/local -xzf /tmp/go.tar.gz
 rm /tmp/go.tar.gz
 
 echo 'export PATH=$PATH:/usr/local/go/bin' >> ~/.bashrc
 source ~/.bashrc
-echo "Go 1.24.1 installed to /usr/local/go"
+echo "Go 1.25.0 installed to /usr/local/go"
 
 # 2. Setup Project
 echo "Step 2/5: Setting up downloader project..."
