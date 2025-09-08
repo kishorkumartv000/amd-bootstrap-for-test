@@ -24,14 +24,14 @@ case $ARCH in
     *) echo "Unsupported architecture: $ARCH"; exit 1 ;;
 esac
 
-echo "Downloading Go 1.23.1 for $ARCH..."
-wget -q --show-progress "https://go.dev/dl/go1.23.1.linux-${GO_ARCH}.tar.gz" -O /tmp/go.tar.gz
+echo "Downloading Go 1.24.1 for $ARCH..."
+wget -q --show-progress "https://go.dev/dl/go1.24.1.linux-${GO_ARCH}.tar.gz" -O /tmp/go.tar.gz
 sudo tar -C /usr/local -xzf /tmp/go.tar.gz
 rm /tmp/go.tar.gz
 
 echo 'export PATH=$PATH:/usr/local/go/bin' >> ~/.bashrc
 source ~/.bashrc
-echo "Go 1.23.1 installed to /usr/local/go"
+echo "Go 1.24.1 installed to /usr/local/go"
 
 # 2. Setup Project
 echo "Step 2/5: Setting up downloader project..."
