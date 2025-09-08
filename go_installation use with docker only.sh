@@ -99,20 +99,7 @@ fi
 
 # 5. Finalize installation
 echo "Step 5/5: Finalizing installation..."
-chmod +x "$HOME/amalac/am_downloader.sh"
+
 
 echo "=== Installation Complete! ==="
 echo "Your Apple Music downloader is ready to use."
-echo ""
-echo "Next steps:"
-echo "1. Edit the configuration file:"
-echo "   nano $CONFIG_FILE"
-echo "   - Set ACTIVE_REMOTES to your rclone remote name(s)"
-echo "   - Adjust other settings as needed"
-echo ""
-echo "2. Download your first album:"
-echo "   bash $HOME/amalac/am_downloader.sh \"https://music.apple.com/...\""
-echo ""
-echo "3. Advanced options examples:"
-echo "   bash $HOME/amalac/am_downloader.sh --all-album \"https://music.apple.com/artist/...\""
-echo "   bash $HOME/amalac/am_downloader.sh --atmos --alac-max 256000 \"https://music.apple.com/album/...\""
