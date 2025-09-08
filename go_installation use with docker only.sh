@@ -11,7 +11,7 @@ ALAC_DIR="$HOME/Music/Apple Music/alac"
 ATMOS_DIR="$HOME/Music/Apple Music/atmos"
 AAC_DIR="$HOME/Music/Apple Music/aac"
 
-# 1. Install Go 1.23.1
+# 1. Install Go 1.24.1
 echo "Step 1/5: Installing Go language..."
 sudo rm -rf /usr/local/go /usr/lib/go-* 2>/dev/null || true
 
