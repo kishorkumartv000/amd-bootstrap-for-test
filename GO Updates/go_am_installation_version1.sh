@@ -6,10 +6,8 @@ echo "=== Apple Music Downloader Installation ==="
 echo "This script installs dependencies for downloading Apple Music tracks in ALAC, Atmos, and AAC formats with cloud sync support."
 
 # Configuration
-INSTALL_OFFICIAL_GO_TYPE=true   # true = install to /usr/local/go, false = install to $HOME/go-sdk
-USE_OFFICIAL_GO_URL=true        # true = download from go.dev, false = use custom GitHub mirror
-MOVE_BINARY_TO_GLOBAL=true      # true = move binary to /usr/local/bin, false = leave in project folder
-CUSTOM_BINARY_NAME=am_downloader  # name of the compiled binary
+INSTALL_OFFICIAL_GO_TYPE=true  # true = install to /usr/local/go, false = install to $HOME/go-sdk
+USE_OFFICIAL_GO_URL=true       # true = download from go.dev, false = use custom GitHub mirror
 GO_VERSION="1.24.1"
 ALAC_DIR="$HOME/Music/Apple Music/alac"
 ATMOS_DIR="$HOME/Music/Apple Music/atmos"
@@ -134,20 +132,11 @@ if [ ! -f "main.go" ]; then
     exit 1
 fi
 
-if go build -o "$CUSTOM_BINARY_NAME" .; then
-    echo "✅ Build successful! Executable created: $CUSTOM_BINARY_NAME"
+if go build -o am_downloader .; then
+    echo "✅ Build successful! Executable created: am_downloader"
 else
     echo "❌ Build failed. Please check go.mod and dependencies."
     exit 1
-fi
-
-# Optional: Move binary to global path
-if [ "$MOVE_BINARY_TO_GLOBAL" = true ]; then
-    echo "Moving binary to /usr/local/bin for global access..."
-    sudo mv "$HOME/amalac/$CUSTOM_BINARY_NAME" /usr/local/bin/$CUSTOM_BINARY_NAME
-    echo "✅ $CUSTOM_BINARY_NAME is now globally accessible"
-else
-    echo "ℹ️ $CUSTOM_BINARY_NAME binary remains in $HOME/amalac"
 fi
 
 echo "=== Installation Complete! ==="
