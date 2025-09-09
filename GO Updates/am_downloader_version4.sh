@@ -3,9 +3,9 @@
 set -e
 
 # Configuration
-USE_FALLBACK=true         # true = use original fallback logic
+USE_FALLBACK=false         # true = use original fallback logic
 USE_CUSTOM_GO=false       # true = force custom Go path only
-USE_SYSTEM_GO=false       # true = force system Go path only
+USE_SYSTEM_GO=true       # true = force system Go path only
 
 # Fallback paths
 CUSTOM_GO_BIN="$HOME/go-sdk/go/bin"
