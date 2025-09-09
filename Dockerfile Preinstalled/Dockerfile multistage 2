@@ -53,7 +53,8 @@ RUN ARCH=$(uname -m) && \
     wget -q "$BENTO4_URL" -O bento4.zip && \
     unzip -o -q bento4.zip && \
     cd Bento4-SDK-* && \
-    find bin/ -maxdepth 1 -type f -executable -exec cp {} /usr/local/bin \; && \
+    mkdir -p /usr/local/bin/Bento4 && \
+    find bin/ -maxdepth 1 -type f -executable -exec cp {} /usr/local/bin/Bento4/ \; && \
     cp -r include /usr/local/include/Bento4 && \
     cp -r lib /usr/local/lib/Bento4 && \
     rm -rf /tmp/Bento4
