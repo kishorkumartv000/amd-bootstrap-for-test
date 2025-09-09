@@ -184,7 +184,7 @@ WORKDIR /usr/src/app
 COPY --from=builder /usr/src/app/ /usr/src/app/
 COPY --from=builder /usr/local/bin/MP4Box /usr/local/bin/
 COPY --from=builder /usr/local/bin/Bento4/ /usr/local/bin/Bento4/
-COPY --from=builder /usr/local/bin/rclone /usr/local/bin/
+COPY --from=builder /usr/bin/rclone /usr/local/bin/
 COPY --from=builder /usr/bin/N_m3u8DL-RE /usr/local/bin/
 COPY --from=builder /usr/local/bin/am_downloader /usr/local/bin/
 COPY --from=builder /usr/local/lib/Bento4/ /usr/local/lib/Bento4/
