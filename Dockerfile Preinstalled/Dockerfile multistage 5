@@ -204,6 +204,9 @@ COPY --from=builder /usr/bin/N_m3u8DL-RE /usr/local/bin/
 COPY --from=builder /usr/local/lib/Bento4/ /usr/local/lib/Bento4/
 COPY --from=builder /usr/local/include/Bento4/ /usr/local/include/Bento4/
 
+# ✅ Copy Go toolchain
+COPY --from=builder /usr/local/go /usr/local/go
+
 # ✅ Copy wrapper environment
 COPY --from=builder /app/wrapper/ /app/wrapper/
 COPY --from=builder /app/rootfs/ /app/rootfs/
