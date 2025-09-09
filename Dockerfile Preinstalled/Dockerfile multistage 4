@@ -177,6 +177,13 @@ ENV DEBIAN_FRONTEND=noninteractive \
 
 WORKDIR /usr/src/app
 
+RUN apt-get update && apt-get install -y \
+    file \
+    unzip \
+    curl \
+    wget \
+    && rm -rf /var/lib/apt/lists/*
+
 # Copy essential files from the builder stage
 COPY --from=builder /usr/src/app/ /usr/src/app/
 COPY --from=builder /usr/local/bin/MP4Box /usr/local/bin/
