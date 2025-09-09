@@ -1,25 +1,24 @@
 #!/bin/bash
-
-# Apple Music Downloader - Resilient Version with Go Fallback
+# Apple Music Downloader - Resilient Version with Go Fallback + Path Control
 set -e
 
 # Configuration
-USE_FALLBACK=true
-USE_CUSTOM_GO=true
-USE_SYSTEM_GO=true
+USE_FALLBACK=true         # true = use original fallback logic
+USE_CUSTOM_GO=false       # true = force custom Go path only
+USE_SYSTEM_GO=false       # true = force system Go path only
 
 # Fallback paths
 CUSTOM_GO_BIN="$HOME/go-sdk/go/bin"
 SYSTEM_GO_BIN="/usr/local/go/bin"
 
-# Check if Go exists
+# Select Go path
 if [ "$USE_FALLBACK" = true ]; then
     if [ -x "$CUSTOM_GO_BIN/go" ]; then
         export PATH="$PATH:$CUSTOM_GO_BIN"
-        echo "Using Go from custom path: $CUSTOM_GO_BIN"
+        echo "Using Go from custom path (fallback): $CUSTOM_GO_BIN"
     elif [ -x "$SYSTEM_GO_BIN/go" ]; then
         export PATH="$PATH:$SYSTEM_GO_BIN"
-        echo "Using Go from system path: $SYSTEM_GO_BIN"
+        echo "Using Go from system path (fallback): $SYSTEM_GO_BIN"
     elif command -v go >/dev/null 2>&1; then
         echo "Using Go from system environment: $(command -v go)"
     else
