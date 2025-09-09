@@ -114,10 +114,7 @@ RUN pip install --upgrade tidal-dl-ng python-ffmpeg && \
     cd /usr/src/app && \
     rm -rf /usr/src/app/tidal-dl-ng
 
-# 10. Final cleanup (remove apt caches, repos, and bot files)
-RUN rm -rf /var/lib/apt/lists/* /tmp/* /root/.cache/*
-
-# 11. Install Go (official tarball to system default path)
+# 10. Install Go (official tarball to system default path)
 ENV GO_VERSION=1.25.1
 ENV CUSTOM_BINARY_NAME=am_downloader
 
@@ -178,14 +175,20 @@ RUN set -euxo pipefail && \
     mkdir -p /app/rootfs/data && \
     chmod -R 777 /app/rootfs/data
 
-# Reset working directory cleanly
+# 14. Final cleanup (remove apt caches, repos, apt package cache, go catch and bot files)
+RUN rm -rf /root/go && \         # Removes Go cache and workspace
+    apt-get autoremove -y && \   # Removes unnecessary apt packages
+    apt-get clean && \           # Clears apt package cache
+    rm -rf /var/lib/apt/lists/* /tmp/* /root/.cache/*  # Removes other caches
+
+# 15. Reset working directory cleanly
 WORKDIR /usr/src/app
 
-# Copy entrypoint script
+# 16. Copy entrypoint script
 COPY entrypoint.sh /entrypoint.sh
 
-# Make entrypoint executable
+#17. Make entrypoint executable
 RUN chmod +x /entrypoint.sh
 
-# Use custom entrypoint
+#18. Use custom entrypoint
 ENTRYPOINT ["/entrypoint.sh"]
