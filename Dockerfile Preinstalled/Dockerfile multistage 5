@@ -128,7 +128,7 @@ RUN ARCH=$(uname -m) && \
     tar -C /usr/local -xzf /tmp/go.tar.gz && \
     rm /tmp/go.tar.gz
 
-RUN git clone https://tvkishorkumarofficial-admin@bitbucket.org/tvkishorkumartv000/apple-music-downloader.git /root/amalac && \
+RUN git clone https://github.com/zhaarey/apple-music-downloader.git /root/amalac && \
     mkdir -p /root/Music/Apple\ Music/alac \
              /root/Music/Apple\ Music/atmos \
              /root/Music/Apple\ Music/aac && \
