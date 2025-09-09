@@ -177,7 +177,6 @@ RUN set -euxo pipefail && \
 
 # 14. Final cleanup (remove apt caches, repos, apt package cache, go catch and bot files)
 RUN rm -rf /root/go && \         # Removes Go cache and workspace
-    apt-get autoremove -y && \   # Removes unnecessary apt packages
     apt-get clean && \           # Clears apt package cache
     rm -rf /var/lib/apt/lists/* /tmp/* /root/.cache/*  # Removes other caches
 
