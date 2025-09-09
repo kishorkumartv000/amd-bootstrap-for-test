@@ -107,7 +107,7 @@ RUN git clone --depth 1 https://github.com/exislow/tidal-dl-ng.git /tmp/tidal-dl
     rm -rf /tmp/tidal-dl-ng
 
 # 9. Install Tidal-dl-ng + python-ffmpeg, then remove repo
-RUN pip install --upgrade tidal-dl-ng python-ffmpeg && \
+RUN pip install --upgrade tidal-dl-ng && \
     cd /usr/src/app/tidal-dl-ng && \
     pip install --upgrade poetry && \
     poetry install --all-extras --with dev,docs && \
