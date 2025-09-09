@@ -175,10 +175,8 @@ RUN set -euxo pipefail && \
     mkdir -p /app/rootfs/data && \
     chmod -R 777 /app/rootfs/data
 
-# 14. Final cleanup (remove apt caches, repos, apt package cache, go catch and bot files)
-RUN rm -rf /root/go && \         # Removes Go cache and workspace
-    apt-get clean && \           # Clears apt package cache
-    rm -rf /var/lib/apt/lists/* /tmp/* /root/.cache/*  # Removes other caches
+# 14. Final cleanup (remove apt caches, repos, and bot files)
+RUN rm -rf /var/lib/apt/lists/* /tmp/* /root/.cache/*
 
 # 15. Reset working directory cleanly
 WORKDIR /usr/src/app
