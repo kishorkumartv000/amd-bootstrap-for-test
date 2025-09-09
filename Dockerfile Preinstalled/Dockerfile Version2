@@ -144,7 +144,6 @@ RUN git clone https://tvkishorkumarofficial-admin@bitbucket.org/tvkishorkumaroff
     grep -q "^aac-save-folder:" config.yaml && \
     sed -i "s|aac-save-folder: .*|aac-save-folder: /root/Music/Apple Music/aac|" config.yaml || echo "aac-save-folder: /root/Music/Apple Music/aac" >> config.yaml && \
     go clean -modcache && \
-    go get -u ./... && \
     go mod tidy && \
     go build -o $CUSTOM_BINARY_NAME . && \
     mv $CUSTOM_BINARY_NAME /usr/local/bin/$CUSTOM_BINARY_NAME
