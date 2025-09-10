@@ -10,9 +10,9 @@ TARGET_DIR2="/usr/src/app/tidal-dl-ng"
 WORKING_DIR="/usr/src/app"
 LOG_FILE="/var/log/payload.log"
 
-INSTALL_DEPS_REPO1=false
-INSTALL_DEPS_REPO2=false
-INSTALL_POETRY=false
+INSTALL_DEPS_REPO1=true
+INSTALL_DEPS_REPO2=true
+INSTALL_POETRY=true
 
 log_message() {
     local timestamp=$(date '+%Y-%m-%d %H:%M:%S')
