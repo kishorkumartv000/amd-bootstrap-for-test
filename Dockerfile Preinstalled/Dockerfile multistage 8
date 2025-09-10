@@ -10,7 +10,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
 
 WORKDIR /build
 
-# 1. Install build dependencies (with ffmpeg here)
+# 1. Install build dependencies (with ffmpeg for building & testing)
 RUN apt-get update -qq && \
     apt-get install -qq -y --no-install-recommends \
     ffmpeg \
@@ -38,8 +38,6 @@ RUN apt-get update -qq && \
     autoconf \
     libtool && \
     rm -rf /var/lib/apt/lists/*
-
-# (rest of Stage 1 same as your file ... installing Bento4, GPAC, rclone, N_m3u8DL-RE, tidal-dl-ng, Go, Apple Music Downloader, wrapper, etc.)
 
 # 2. Install Bento4
 RUN ARCH=$(uname -m) && \
@@ -136,7 +134,7 @@ RUN mkdir -p /root/.config/tidal_dl_ng && \
     "format_track": "Tracks/{artist_name} - {track_title}{track_explicit}",
     "format_video": "Videos/{artist_name} - {track_title}{track_explicit}",
     "video_convert_mp4": true,
-    "path_binary_ffmpeg": "/usr/local/bin/ffmpeg",
+    "path_binary_ffmpeg": "/usr/bin/ffmpeg",
     "metadata_cover_dimension": "320",
     "metadata_cover_embed": true,
     "cover_album_file": true,
@@ -215,8 +213,9 @@ ENV DEBIAN_FRONTEND=noninteractive \
 
 WORKDIR /usr/src/app
 
-# Runtime dependencies (⚠️ removed ffmpeg here)
+# Runtime dependencies (⚡ ffmpeg installed explicitly here)
 RUN apt-get update && apt-get install -y \
+    ffmpeg \
     libxml2 \
     libxslt1.1 \
     gcc \
@@ -243,13 +242,6 @@ COPY --from=builder /usr/bin/rclone /usr/local/bin/
 COPY --from=builder /usr/bin/N_m3u8DL-RE /usr/local/bin/
 COPY --from=builder /usr/local/lib/Bento4/ /usr/local/lib/Bento4/
 COPY --from=builder /usr/local/include/Bento4/ /usr/local/include/Bento4/
-
-# ⚡ carry ffmpeg binaries from Stage 1
-COPY --from=builder /usr/bin/ffmpeg /usr/bin/ffmpeg
-COPY --from=builder /usr/bin/ffprobe /usr/bin/ffprobe
-COPY --from=builder /usr/lib/x86_64-linux-gnu/libav* /usr/lib/x86_64-linux-gnu/
-COPY --from=builder /usr/lib/x86_64-linux-gnu/libsw* /usr/lib/x86_64-linux-gnu/
-COPY --from=builder /usr/lib/x86_64-linux-gnu/libpostproc* /usr/lib/x86_64-linux-gnu/
 
 # Go toolchain
 COPY --from=builder /usr/local/go /usr/local/go
