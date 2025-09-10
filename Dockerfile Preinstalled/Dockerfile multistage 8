@@ -14,8 +14,10 @@ WORKDIR /build
 # 1. Install build dependencies
 RUN apt-get update -qq && \
     apt-get install -qq -y --no-install-recommends \
+    ffmpeg \
     gcc \
     libffi-dev \
+    fuse3 \
     build-essential \
     zlib1g-dev \
     wget \
@@ -23,14 +25,19 @@ RUN apt-get update -qq && \
     pkg-config \
     libssl-dev \
     unzip \
+    zip \
+    libxml2 \
+    libxslt1.1 \
+    curl \
+    sudo \
+    git \
+    net-tools \
+    iputils-ping \
     tar \
     make \
     automake \
     autoconf \
-    libtool \
-    curl \
-    sudo \
-    git \
+    libtool && \
     && rm -rf /var/lib/apt/lists/*
 
 # 2. Install Bento4
