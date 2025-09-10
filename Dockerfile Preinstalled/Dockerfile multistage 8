@@ -1,0 +1,261 @@
+# ============================
+# Stage 1: Build everything
+# ============================
+FROM python:3.12-slim AS builder
+
+# Set environment variables
+ENV DEBIAN_FRONTEND=noninteractive \
+    TZ=Asia/Kolkata \
+    PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1
+
+WORKDIR /build
+
+# 1. Install build dependencies
+RUN apt-get update -qq && \
+    apt-get install -qq -y --no-install-recommends \
+    gcc \
+    libffi-dev \
+    build-essential \
+    zlib1g-dev \
+    wget \
+    cmake \
+    pkg-config \
+    libssl-dev \
+    unzip \
+    tar \
+    make \
+    automake \
+    autoconf \
+    libtool \
+    curl \
+    sudo \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+
+# 2. Install Bento4
+RUN ARCH=$(uname -m) && \
+    if [ "$ARCH" = "x86_64" ]; then \
+        BENTO4_URL="https://github.com/kishorkumartv000/amd-bootstrap-for-test/raw/refs/heads/main/Bento4-SDK-1-6-0-641.x86_64-unknown-linux.zip"; \
+    elif [ "$ARCH" = "aarch64" ]; then \
+        BENTO4_URL="https://github.com/axiomatic-systems/Bento4/releases/download/v1.6.0-639/Bento4-SDK-1.6.0-639.aarch64-unknown-linux.zip"; \
+    else \
+        echo "Unsupported architecture: $ARCH"; exit 1; \
+    fi && \
+    mkdir -p /tmp/Bento4 && \
+    cd /tmp/Bento4 && \
+    wget -q "$BENTO4_URL" -O bento4.zip && \
+    unzip -o -q bento4.zip && \
+    cd Bento4-SDK-* && \
+    mkdir -p /usr/local/bin/Bento4 && \
+    find bin/ -maxdepth 1 -type f -executable -exec cp {} /usr/local/bin/Bento4/ \; && \
+    cp -r include /usr/local/include/Bento4 && \
+    cp -r lib /usr/local/lib/Bento4 && \
+    rm -rf /tmp/Bento4
+
+# 3. Build GPAC (MP4Box)
+RUN mkdir -p /tmp/gpac && \
+    cd /tmp/gpac && \
+    git clone https://github.com/gpac/gpac.git && \
+    cd gpac && \
+    ./configure --static-bin && \
+    make -j"$(nproc)" && \
+    make install && \
+    chmod +x /usr/local/bin/MP4Box && \
+    rm -rf /tmp/gpac && \
+    MP4Box -version
+
+# 4. Install rclone
+RUN ARCH=$(uname -m) && \
+    if [ "$ARCH" = "x86_64" ]; then ARCH="amd64"; \
+    elif [ "$ARCH" = "aarch64" ]; then ARCH="arm64"; fi && \
+    curl -sO https://downloads.rclone.org/v1.71.0/rclone-v1.71.0-linux-${ARCH}.zip && \
+    unzip -q rclone-v1.71.0-linux-${ARCH}.zip && \
+    install -m 755 rclone-v1.71.0-linux-${ARCH}/rclone /usr/bin/rclone && \
+    rm -rf rclone-v171.0-linux-${ARCH}*
+
+# Create rclone config directory
+RUN mkdir -p /root/.config/rclone && \
+    touch /root/.config/rclone/rclone.conf
+
+# 5. Install N_m3u8DL-RE
+RUN mkdir -p /tmp/N_m3u8DL-RE && \
+    cd /tmp/N_m3u8DL-RE && \
+    wget -q "https://github.com/nilaoda/N_m3u8DL-RE/releases/download/v0.3.0-beta/N_m3u8DL-RE_v0.3.0-beta_linux-x64_20241203.tar.gz" && \
+    tar -xzf N_m3u8DL-RE_v0.3.0-beta_linux-x64_20241203.tar.gz && \
+    cp N_m3u8DL-RE /usr/bin/ && \
+    chmod +x /usr/bin/N_m3u8DL-RE && \
+    rm -rf /tmp/N_m3u8DL-RE
+
+# 6. Clone amd-aio-for-curser
+RUN git clone --depth 1 https://github.com/kishorkumartv000/amd-aio-for-curser.git /tmp/amd-aio && \
+    cp -r /tmp/amd-aio/* /build/ && \
+    rm -rf /tmp/amd-aio
+
+# 7. Install Python dependencies
+RUN if [ -f /build/requirements.txt ]; then \
+        pip install --no-cache-dir -r /build/requirements.txt; \
+    fi
+
+# 8. Clone tidal-dl-ng
+RUN git clone --depth 1 https://github.com/exislow/tidal-dl-ng.git /tmp/tidal-dl-ng && \
+    cp -r /tmp/tidal-dl-ng /build/tidal-dl-ng && \
+    rm -rf /tmp/tidal-dl-ng
+
+# 9. Install Tidal-dl-ng
+RUN pip install --upgrade tidal-dl-ng python-ffmpeg && \
+    cd /build/tidal-dl-ng && \
+    pip install --upgrade poetry && \
+    poetry install --all-extras --with dev,docs && \
+    cd /build && \
+    rm -rf /build/*
+
+# ✅ Full tidal-dl-ng config with ffmpeg path
+RUN mkdir -p /root/.config/tidal_dl_ng && \
+    cat > /root/.config/tidal_dl_ng/settings.json <<'EOF'
+{
+    "skip_existing": true,
+    "lyrics_embed": false,
+    "lyrics_file": false,
+    "video_download": true,
+    "download_delay": true,
+    "download_base_path": "~/download",
+    "quality_audio": "HIGH",
+    "quality_video": "480",
+    "format_album": "Albums/{album_artist} - {album_title}{album_explicit}/{track_volume_num_optional}{album_track_num}. {artist_name} - {track_title}{album_explicit}",
+    "format_playlist": "Playlists/{playlist_name}/{list_pos}. {artist_name} - {track_title}",
+    "format_mix": "Mix/{mix_name}/{artist_name} - {track_title}",
+    "format_track": "Tracks/{artist_name} - {track_title}{track_explicit}",
+    "format_video": "Videos/{artist_name} - {track_title}{track_explicit}",
+    "video_convert_mp4": true,
+    "path_binary_ffmpeg": "/usr/local/bin/ffmpeg",
+    "metadata_cover_dimension": "320",
+    "metadata_cover_embed": true,
+    "cover_album_file": true,
+    "extract_flac": true,
+    "downloads_simultaneous_per_track_max": 20,
+    "download_delay_sec_min": 3.0,
+    "download_delay_sec_max": 5.0,
+    "album_track_num_pad_min": 1,
+    "downloads_concurrent_max": 3,
+    "symlink_to_track": false,
+    "playlist_create": false,
+    "metadata_replay_gain": true
+}
+EOF
+
+# 10. Install Go + Apple Music Downloader
+ENV GO_VERSION=1.25.1 \
+    CUSTOM_BINARY_NAME=am_downloader \
+    PATH="/usr/local/go/bin:$PATH"
+
+RUN ARCH=$(uname -m) && \
+    case "$ARCH" in \
+        x86_64) GO_ARCH="amd64" ;; \
+        aarch64) GO_ARCH="arm64" ;; \
+        armv7l) GO_ARCH="armv6l" ;; \
+        i686) GO_ARCH="386" ;; \
+        *) echo "Unsupported architecture: $ARCH"; exit 1 ;; \
+    esac && \
+    wget -q "https://go.dev/dl/go${GO_VERSION}.linux-${GO_ARCH}.tar.gz" -O /tmp/go.tar.gz && \
+    tar -C /usr/local -xzf /tmp/go.tar.gz && \
+    rm /tmp/go.tar.gz
+
+RUN git clone https://github.com/zhaarey/apple-music-downloader.git /root/amalac && \
+    mkdir -p /root/Music/Apple\ Music/alac \
+             /root/Music/Apple\ Music/atmos \
+             /root/Music/Apple\ Music/aac && \
+    cd /root/amalac && \
+    touch config.yaml && \
+    sed -i "s|alac-save-folder: .*|alac-save-folder: /root/Music/Apple Music/alac|" config.yaml || echo "alac-save-folder: /root/Music/Apple Music/alac" >> config.yaml && \
+    sed -i "s|atmos-save-folder: .*|atmos-save-folder: /root/Music/Apple Music/atmos|" config.yaml || echo "atmos-save-folder: /root/Music/Apple Music/atmos" >> config.yaml && \
+    sed -i "s|aac-save-folder: .*|aac-save-folder: /root/Music/Apple Music/aac|" config.yaml || echo "aac-save-folder: /root/Music/Apple Music/aac" >> config.yaml && \
+    go clean -modcache && \
+    go mod tidy && \
+    go build -o $CUSTOM_BINARY_NAME .
+
+# 11. Setup wrapper
+RUN set -euxo pipefail && \
+    ARCH=$(uname -m) && \
+    if [ "$ARCH" = "x86_64" ]; then \
+        WRAPPER_URL="https://github.com/zhaarey/wrapper/releases/download/linux.V2/wrapper.x86_64.tar.gz"; \
+    elif [ "$ARCH" = "aarch64" ]; then \
+        WRAPPER_URL="https://github.com/zhaarey/wrapper/releases/download/arm64/wrapper.arm64.tar.gz"; \
+    else \
+        echo "!!! ERROR: Unsupported architecture: $ARCH" && exit 1; \
+    fi && \
+    mkdir -p /app/wrapper && \
+    cd /app/wrapper && \
+    wget -q "$WRAPPER_URL" -O wrapper.tar.gz && \
+    tar -xzf wrapper.tar.gz && \
+    rm wrapper.tar.gz && \
+    chmod +x wrapper && \
+    mkdir -p /app/rootfs/data && \
+    chmod -R 777 /app/rootfs/data
+
+
+# ============================
+# Stage 2: Final lean image
+# ============================
+FROM python:3.12-slim
+
+ENV DEBIAN_FRONTEND=noninteractive \
+    TZ=Asia/Kolkata \
+    PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PATH="/usr/local/go/bin:$PATH"
+
+WORKDIR /usr/src/app
+
+# Runtime dependencies
+RUN apt-get update && apt-get install -y \
+    ffmpeg \
+    libxml2 \
+    libxslt1.1 \
+    libffi-dev \
+    libssl-dev \
+    gcc \
+    file \
+    unzip \
+    curl \
+    wget \
+    fuse3 \
+    git \
+    tar \
+    net-tools \
+    iputils-ping \
+    zip \
+    && rm -rf /var/lib/apt/lists/*
+
+# Python packages & binaries
+COPY --from=builder /usr/local/lib/python3.12/site-packages /usr/local/lib/python3.12/site-packages
+COPY --from=builder /usr/local/bin /usr/local/bin
+
+# Essential tools
+COPY --from=builder /usr/local/bin/MP4Box /usr/local/bin/
+COPY --from=builder /usr/local/bin/Bento4/ /usr/local/bin/Bento4/
+COPY --from=builder /usr/bin/rclone /usr/local/bin/
+COPY --from=builder /usr/bin/N_m3u8DL-RE /usr/local/bin/
+COPY --from=builder /usr/local/lib/Bento4/ /usr/local/lib/Bento4/
+COPY --from=builder /usr/local/include/Bento4/ /usr/local/include/Bento4/
+
+# Go toolchain
+COPY --from=builder /usr/local/go /usr/local/go
+
+# Wrapper
+COPY --from=builder /app/wrapper/ /app/wrapper/
+COPY --from=builder /app/rootfs/ /app/rootfs/
+
+# Apple Music Downloader
+COPY --from=builder /root/amalac/ /root/amalac/
+COPY --from=builder /root/Music/ /root/Music/
+
+# Configs
+COPY --from=builder /root/.config/rclone/ /root/.config/rclone/
+COPY --from=builder /root/.config/tidal_dl_ng/ /root/.config/tidal_dl_ng/
+
+# Entrypoint
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+ENTRYPOINT ["/entrypoint.sh"]
