@@ -121,13 +121,13 @@ RUN mkdir -p /root/.config/tidal_dl_ng && \
     cat > /root/.config/tidal_dl_ng/settings.json <<'EOF'
 {
     "skip_existing": true,
-    "lyrics_embed": false,
-    "lyrics_file": false,
+    "lyrics_embed": true,
+    "lyrics_file": true,
     "video_download": true,
     "download_delay": true,
     "download_base_path": "~/download",
-    "quality_audio": "HIGH",
-    "quality_video": "480",
+    "quality_audio": "HI_RES_LOSSLESS",
+    "quality_video": "1080",
     "format_album": "Albums/{album_artist} - {album_title}{album_explicit}/{track_volume_num_optional}{album_track_num}. {artist_name} - {track_title}{album_explicit}",
     "format_playlist": "Playlists/{playlist_name}/{list_pos}. {artist_name} - {track_title}",
     "format_mix": "Mix/{mix_name}/{artist_name} - {track_title}",
@@ -135,7 +135,7 @@ RUN mkdir -p /root/.config/tidal_dl_ng && \
     "format_video": "Videos/{artist_name} - {track_title}{track_explicit}",
     "video_convert_mp4": true,
     "path_binary_ffmpeg": "/usr/bin/ffmpeg",
-    "metadata_cover_dimension": "320",
+    "metadata_cover_dimension": "1280",
     "metadata_cover_embed": true,
     "cover_album_file": true,
     "extract_flac": true,
@@ -146,7 +146,8 @@ RUN mkdir -p /root/.config/tidal_dl_ng && \
     "downloads_concurrent_max": 3,
     "symlink_to_track": false,
     "playlist_create": false,
-    "metadata_replay_gain": true
+    "metadata_replay_gain": false,
+    "metadata_write_url": true
 }
 EOF
 
