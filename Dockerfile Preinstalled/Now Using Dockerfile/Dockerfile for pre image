@@ -1,0 +1,10 @@
+FROM ghcr.io/kishorkumartv000/amd-aio:originalslimpreinstalledimage
+
+# Set working directory (optional but recommended)
+WORKDIR /usr/src/app
+
+# Entrypoint
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+ENTRYPOINT ["/entrypoint.sh"]
