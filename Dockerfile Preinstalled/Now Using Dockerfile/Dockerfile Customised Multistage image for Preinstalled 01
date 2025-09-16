@@ -212,6 +212,7 @@ RUN apt-get update && apt-get install -y \
     net-tools \
     iputils-ping \
     zip \
+    nano \
     && rm -rf /var/lib/apt/lists/*
 
 # Python deps + binaries
