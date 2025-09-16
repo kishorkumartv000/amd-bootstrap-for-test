@@ -237,9 +237,3 @@ COPY --from=builder /root/Music/ /root/Music/
 # Configs
 COPY --from=builder /root/.config/rclone/ /root/.config/rclone/
 COPY --from=builder /root/.config/tidal_dl_ng/ /root/.config/tidal_dl_ng/
-
-# Entrypoint
-COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
-
-ENTRYPOINT ["/entrypoint.sh"]
