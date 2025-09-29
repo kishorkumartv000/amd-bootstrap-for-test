@@ -3,7 +3,7 @@
 # payload.sh - Script to clone repositories, install dependencies, and execute final steps
 
 # Configuration
-REPO1_URL="https://github.com/kishorkumartv000/amd-aio-jules-test2-update1"
+REPO1_URL="https://github.com/kishorkumartv000/amd-aio-jules-test2-update3"
 REPO2_URL="https://github.com/exislow/tidal-dl-ng.git"
 TARGET_DIR1="/usr/src/app/amd-aio-for-curser"
 TARGET_DIR2="/usr/src/app/tidal-dl-ng"
